@@ -1,0 +1,212 @@
+<!<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>authing sdk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <script src="authing.js"></script>
+    <script>
+        
+    // 注册SDK
+    function registerSDKWithClientId(clientId) {
+         const auth = new Authing({
+                                  clientId:clientId,
+                                  timestamp: Math.round(new Date() / 1000),
+                                  nonce: Math.ceil(Math.random() * Math.pow(10, 6)),
+                                  });
+                                  auth.then((authing) => {
+                                            window.authing = authing;
+                                            authingSuccessCallBack(authing);
+                                            }).catch(error => authingFaileCallBack(error))
+                                  
+     }
+    
+    // 登录
+    function loginWithParameter(email,password,unionid,verifyCode,lastIP){
+        authing.login({
+                      email: email,
+                      password: password,
+                      unionid: unionid,
+                      verifyCode: verifyCode,
+                      lastIP: lastIP
+                      }).then(result => {
+                              authingSuccessCallBack(result);
+                              }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 注册
+    function registerWithParameter(email,password,unionid,oauth,username,nickname,company,photo,lastIP){
+        authing.register({
+                      email: email,
+                      password: password,
+                      unionid: unionid,
+                      oauth: oauth,
+                      username: username,
+                      nickname: nickname,
+                      company: company,
+                      photo:photo,
+                      lastIP: lastIP
+                      }).then(result => {
+                              authingSuccessCallBack(result);
+                              }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 发送手机验证码
+    function getVerificationCode(phone){
+        authing.getVerificationCode({
+                      phone: phone,
+                      }).then(result => {
+                              authingSuccessCallBack(result);
+                              }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 使用手机验证码登录
+    function loginByPhoneCode(phone,phoneCode){
+        authing.loginByPhoneCode({
+            phone: phone,
+            phoneCode: phoneCode
+        }).then(result => {
+                authingSuccessCallBack(result);
+                }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 使用 LDAP 登录
+    function loginByLDAP(username,password){
+        authing.loginByLDAP({
+            username: username,
+            password: password
+        }).then(result => {
+                authingSuccessCallBack(result);
+                }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 刷新用户Token
+    function refreshToken(user){
+        authing.refreshToken({
+                            user: user
+                            }).then(result => {
+                                    authingSuccessCallBack(result);
+                                    }).catch(error => authingFaileCallBack(error));
+    }
+    // 退出
+    function logout(user){
+        authing.logout({
+                         user: user
+                         }).then(result => {
+                                 authingSuccessCallBack(result);
+                                 }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 获取单个用户资料
+    function user(user){
+        authing.user({
+                       user: user
+                       }).then(result => {
+                               authingSuccessCallBack(result);
+                               }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 一次性获取多个用户的资料
+    function userPatch(ids){
+        authing.userPatch({
+                     ids: ids
+                     }).then(result => {
+                             authingSuccessCallBack(result);
+                             }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 获取用户列表
+    function list(page,count){
+        authing.userPatch({
+                          page: page,
+                          count: count
+                          }).then(result => {
+                                  authingSuccessCallBack(result);
+                                  }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 删除用户
+    function remove(user){
+        authing.remove({
+                          user: user,
+                          }).then(result => {
+                                  authingSuccessCallBack(result);
+                                  }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 获取用户权限和角色
+    function queryPermissions(userId){
+        authing.queryPermissions({
+                       userId: userId,
+                       }).then(result => {
+                               authingSuccessCallBack(result);
+                               }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 获取应用下所有角色
+    function queryRoles(page,count){
+        authing.queryPermissions({
+                                 page: page,
+                                 count: count
+                                 }).then(result => {
+                                         authingSuccessCallBack(result);
+                                         }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 创建用户角色
+    function createRole(name,descriptions){
+        authing.createRole({
+                                 name: name,
+                                 descriptions: descriptions
+                                 }).then(result => {
+                                         authingSuccessCallBack(result);
+                                         }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 修改角色权限
+    function updateRolePermissions(name,roleId,permissions){
+        authing.updateRolePermissions({
+                           name: name,
+                           roleId: roleId,
+                           permissions: permissions
+                           }).then(result => {
+                                   authingSuccessCallBack(result);
+                                   }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 指派用户到某角色
+    function assignUserToRole(userId){
+        authing.assignUserToRole({
+                                  userId: userId
+                                  }).then(result => {
+                                          authingSuccessCallBack(result);
+                                          }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 将用户从某角色中移除
+    function removeUserFromRole(roleId,user){
+        authing.removeUserFromRole({
+                                 roleId: roleId,
+                                   user: user
+                                 }).then(result => {
+                                         authingSuccessCallBack(result);
+                                         }).catch(error => authingFaileCallBack(error));
+    }
+    
+    // 成功回调
+    function authingSuccessCallBack(result){
+        window.webkit.messageHandlers.successCallBack.postMessage({body: result});
+        return result;
+    }
+    
+    // 失败回调
+    function authingFaileCallBack(result){
+        window.webkit.messageHandlers.faileCallBack.postMessage({body: result});
+        return result;
+    }
+    </script>
+</body>
+</html>
